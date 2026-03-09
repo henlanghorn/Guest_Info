@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lowther Arms Cottage Guest Guide</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto;margin:0;background:#f6f7f9;color:#333;overflow-x:hidden;}
+header{background:linear-gradient(120deg,#2c3e50,#3f5f7a);color:white;padding:70px 20px 35px;text-align:center;position:relative;z-index:1;}
+header h1{margin:0;font-size:30px;}
+.menu-btn{position:fixed;top:15px;left:15px;background:#2c3e50;color:white;border:none;padding:10px 14px;border-radius:6px;font-size:18px;cursor:pointer;z-index:1002;}
+.sidebar{position:fixed;top:0;left:-260px;width:250px;height:100%;background:#2c3e50;padding-top:70px;transition:.3s;z-index:1003;overflow-y:auto;}
+.sidebar a{display:block;padding:14px 20px;color:white;text-decoration:none;}
+.sidebar a:hover{background:#1f2d3a;}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);opacity:0;visibility:hidden;transition:opacity .3s;z-index:1002;}
+.overlay.show{opacity:1;visibility:visible;}
+.container{max-width:950px;margin:auto;padding:20px;position:relative;z-index:0;}
+section{margin-bottom:40px;}
+.card{background:white;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.08);margin-bottom:18px;overflow:hidden;}
+.card img{width:100%;height:180px;object-fit:cover;}
+.card-content{padding:16px;}
+.btn{display:inline-block;margin-top:8px;margin-right:6px;padding:7px 12px;background:#1a73e8;color:white;border-radius:6px;font-size:14px;text-decoration:none;}
+.btn.secondary{background:#5f6f82;}
+#map{height:420px;border-radius:12px;z-index:0;}
+@media(max-width:600px){header h1{font-size:24px;}}
+</style>
+</head>
+<body>
+
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+<div class="sidebar" id="sidebar">
+  <a href="#house" onclick="scrollToSection('house')">House Info</a>
+  <a href="#mapSection" onclick="scrollToSection('mapSection')">Map</a>
+  <a href="#restaurants" onclick="scrollToSection('restaurants')">Restaurants</a>
+  <a href="#cafes" onclick="scrollToSection('cafes')">Cafés</a>
+  <a href="#takeaways" onclick="scrollToSection('takeaways')">Takeaways</a>
+  <a href="#shopping" onclick="scrollToSection('shopping')">Shopping</a>
+  <a href="#healthcare" onclick="scrollToSection('healthcare')">Healthcare</a>
+  <a href="#vets" onclick="scrollToSection('vets')">Vet Services</a>
+  <a href="#daytrips" onclick="scrollToSection('daytrips')">Lake District</a>
+</div>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<header>
+<h1>Lowther Arms Cottage Guest Guide</h1>
+<p>Local recommendations for your stay</p>
+</header>
+
+<div class="container">
+
+<!-- House Info -->
+<section id="house">
+<h2>🏡 House Information</h2>
+<div class="card"><div class="card-content">
+<b>Bins</b><br>
+- Black bin: general household waste<br>
+- Green bin: metal, plastic and glass<br>
+- Blue-top bin: cardboard and paper<br><br>
+<b>Checkout:</b> 10:00 AM
+</div></div>
+</section>
+
+<!-- Map -->
+<section id="mapSection"><h2>🗺 Town Map</h2><div id="map"></div></section>
+
+<!-- Restaurants -->
+<section id="restaurants">
+<h2>🍽 Restaurants</h2>
+<div class="card"><img src="images/41marketplace.jpg" alt="41 Market Place"><div class="card-content">
+<b>41 Market Place</b><br>Contemporary casual dining.<br>
+<a class="btn" onclick="maps('41 Market Place, Cockermouth, UK')">Directions</a>
+<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=41+Market+Place+Cockermouth" target="_blank">Opening Hours & Menu</a>
+</div></div>
+<div class="card"><img src="images/aspava.jpg" alt="Aspava Restaurant"><div class="card-content">
+<b>Aspava Restaurant</b><br>Turkish cuisine.<br>
+<a class="btn" onclick="maps('Aspava Restaurant, Cockermouth, UK')">Directions</a>
+<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=Aspava+Restaurant+Cockermouth" target="_blank">Opening Hours & Menu</a>
+</div></div>
+<div class="card"><img src="images/bellevue.jpg" alt="The Belle Vue"><div class="card-content">
+<b>The Belle Vue Pub</b><br>Traditional pub meals.<br>
+<a class="btn" onclick="maps('The Belle Vue, Cockermouth, UK')">Directions</a>
+<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=Belle+Vue+Cockermouth" target="_blank">Opening Hours & Menu</a>
+</div></div>
+</section>
+
+<!-- Cafés -->
+<section id="cafes">
+<h2>☕ Cafés</h2>
+<div class="card"><img src="images/rendezvous.jpg" alt="Rendezvous Café"><div class="card-content">
+<b>Rendezvous Café</b><br>Breakfast, brunch, coffee, and cakes.<br>
+<a class="btn" onclick="maps('Rendezvous Café, Cockermouth, UK')">Directions</a>
+<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=Rendezvous+Café+Cockermouth" target="_blank">Opening Hours & Menu</a>
+</div></div>
+<div class="card"><img src="images/moon-and-sixpence.jpg" alt="Moon & Sixpence"><div class="card-content">
+<b>Moon & Sixpence</b><br>Stylish café with brunch and coffee.<br>
+<a class="btn" onclick="maps('Moon & Sixpence, Cockermouth, UK')">Directions</a>
+<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=Moon+%26+Sixpence+Cockermouth" target="_blank">Opening Hours & Menu</a>
+</div></div>
+<div class="card"><img src="images/norham-house.jpg" alt="Norham House Café"><div class="card-content">
+<b>Norham House Café</b><br>Light meals, pastries, and coffee.<br>
+<a class="btn" onclick="maps('Norham House Café, Cockermouth, UK')">Directions</a>
+<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=Norham+House+Cafe+Cockermouth" target="_blank">Opening Hours & Menu</a>
+</div></div>
+</section>
+
+<!-- Takeaways -->
+<section id="takeaways">
+<h2>🍱 Takeaways</h2>
+<div class="card"><img src="images/dominos.jpg" alt="Domino's Pizza"><div class="card-content">
+<b>Domino's Pizza</b><br>Popular pizza chain.<br>
+<a class="btn" onclick="maps('Domino\'s Pizza, Cockermouth, UK')">Directions</a>
+<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=Domino%27s+Pizza+Cockermouth" target="_blank">Opening Hours & Menu</a>
+</div></div>
+<div class="card"><img src="images/lees.jpg" alt="Lees Chinese Takeaway"><div class="card-content">
+<b>Lees Chinese Takeaway</b><br>Local Chinese takeaway.<br>
+<a class="btn" onclick="maps('Lees Chinese Takeaway, Cockermouth, UK')">Directions</a>
+<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=Lees+Chinese+Takeaway+Cockermouth" target="_blank">Opening Hours & Menu</a>
+</div></div>
+<div class="card"><img src="images/alternative.jpg" alt="Alternative Takeaway"><div class="card-content">
+<b>Alternative Takeaway</b><br>Local alternative meals.<br>
+<a class="btn" onclick="maps('Alternative Takeaway, Cockermouth, UK')">Directions</a>
+<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=Alternative+Takeaway+Cockermouth" target="_blank">Opening Hours & Menu</a>
+</div></div>
+</section>
+
+<!-- Shopping -->
+<section id="shopping">
+<h2>🛍 Shopping</h2>
+<div class="card"><div class="card-content"><b>Aldi</b><br>Supermarket.<br><a class="btn" onclick="maps('Aldi, Cockermouth, UK')">Directions</a></div></div>
+<div class="card"><div class="card-content"><b>Lidl</b><br>Supermarket.<br><a class="btn" onclick="maps('Lidl, Cockermouth, UK')">Directions</a></div></div>
+<div class="card"><div class="card-content"><b>Sainsbury's</b><br>Supermarket.<br><a class="btn" onclick="maps('Sainsbury\'s, Cockermouth, UK')">Directions</a></div></div>
+<div class="card"><div class="card-content"><b>Co-op</b><br>Local convenience store.<br><a class="btn" onclick="maps('Co-op, Cockermouth, UK')">Directions</a></div></div>
+</section>
+
+<!-- Healthcare -->
+<section id="healthcare">
+<h2>🏥 Healthcare</h2>
+<div class="card"><div class="card-content">
+<b>Castlegate Surgery</b><br>Phone: 01900 821234<br>
+<a class="btn" onclick="maps('Castlegate Surgery, Cockermouth, UK')">Directions</a>
+</div></div>
+<div class="card"><div class="card-content">
+<b>Cockermouth Hospital</b><br>Phone: 01900 821351<br>
+<a class="btn" onclick="maps('Cockermouth Hospital, Cockermouth, UK')">Directions</a>
+</div></div>
+<div class="card"><div class="card-content">
+<b>Cockermouth Dental Practice</b><br>Phone: 01900 821234<br>
+<a class="btn" onclick="maps('Cockermouth Dental Practice, Cockermouth, UK')">Directions</a>
+</div></div>
+<div class="card"><div class="card-content">
+<b>Market Place Dental Clinic</b><br>Phone: 01900 822111<br>
+<a class="btn" onclick="maps('Market Place Dental Clinic, Cockermouth, UK')">Directions</a>
+</div></div>
+</section>
+
+<!-- Vet Services -->
+<section id="vets">
+<h2>🐾 Vet Services</h2>
+<div class="card"><div class="card-content">
+<b>Cockermouth Veterinary Clinic</b><br>Phone: 01900 823456<br>
+<a class="btn" onclick="maps('Cockermouth Veterinary Clinic, Cockermouth, UK')">Directions</a>
+</div></div>
+</section>
+
+<!-- Lake District Day Trips -->
+<section id="daytrips">
+<h2>🗻 Lake District Day Trips</h2>
+<div class="card"><div class="card-content">
+<b>Keswick Town & Shopping</b><br>Approx. **15 min drive**.<br>
+<a class="btn" onclick="maps('Keswick, UK')">Directions</a>
+<a class="btn secondary" href="https://www.visitcumbria.com/keswick/" target="_blank">Explore Keswick</a>
+</div></div>
+<div class="card"><div class="card-content">
+<b>Derwentwater (Keswick area)</b><br>Approx. **15–20 min drive**.<br>
+<a class="btn" onclick="maps('Derwentwater, Keswick, UK')">Directions</a>
+</div></div>
+<div class="card"><div class="card-content">
+<b>Whinlatter Forest Park</b><br>Approx. **7 min drive** from Cockermouth.<br>
+<a class="btn" onclick="maps('Whinlatter Forest Park, UK')">Directions</a>
+</div></div>
+<div class="card"><div class="card-content">
+<b>Castlerigg Stone Circle</b><br>Approx. **17 min drive**.<br>
+<a class="btn" onclick="maps('Castlerigg Stone Circle, Keswick, UK')">Directions</a>
+</div></div>
+<div class="card"><div class="card-content">
+<b>Buttermere</b><br>Approx. **25 min drive**.<br>
+<a class="btn" onclick="maps('Buttermere, Lake District, UK')">Directions</a>
+<a class="btn secondary" href="https://www.visitcumbria.com/kes/buttermere/" target="_blank">More Info</a>
+</div></div>
+</section>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+function toggleMenu(){
+  let sidebar=document.getElementById('sidebar'), overlay=document.getElementById('overlay');
+  if(sidebar.style.left==='0px'){sidebar.style.left='-260px'; overlay.classList.remove('show');}
+  else{sidebar.style.left='0px'; overlay.classList.add('show');}
+}
+function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'}); toggleMenu();}
+function maps(query){window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(query),'_blank');}
+var map=L.map('map').setView([54.6623,-3.3548],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+L.marker([54.6623,-3.3548]).addTo(map).bindPopup('Lowther Arms Cottage');
+</script>
+
+</body>
+</html>
